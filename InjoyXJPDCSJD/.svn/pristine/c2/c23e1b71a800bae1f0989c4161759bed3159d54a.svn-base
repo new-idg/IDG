@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  injoy_XJPDC
+
+  Created by 念念不忘必有回响 on 2018/10/29.
+  Copyright © 2018年 CX. All rights reserved.
+*/
+
+"我的账单" = "My Bill";
+"我的银行卡" = "My BankCard";
+"联系我们" = "Contact Us";
+
+"设置" = "Set Up";
+"语言切换" = "Language Switch";
+"账户与安全" = "Account And Security";
+"通用" = "General Purpose";
+"关于" = "About";
+"帮助" = "Assistance";
+"退出登录" = "Sign Out";
+

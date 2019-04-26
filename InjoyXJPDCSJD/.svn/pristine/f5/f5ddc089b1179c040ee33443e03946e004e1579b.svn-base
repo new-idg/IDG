@@ -1,0 +1,16 @@
+platform :ios, '8.0'
+
+
+target 'injoy_XJPDC' do
+pod 'AFNetworking'
+pod 'SDWebImage'
+pod 'YYCategories'
+pod 'Masonry'
+pod 'YYModel'
+pod 'YYText'
+pod 'SocketRocket'
+pod 'SDCycleScrollView'
+pod 'GoogleMaps'
+
+end
+

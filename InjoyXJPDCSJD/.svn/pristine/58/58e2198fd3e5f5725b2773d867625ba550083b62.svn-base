@@ -1,0 +1,28 @@
+//
+//  PrefixHeader.pch
+//  injoy_XJPDC
+//
+//  Created by 念念不忘必有回响 on 2018/8/28.
+//  Copyright © 2018年 CX. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#define APPLANGUAGE @"appLanguage"
+#define AppLanguageDidChangeNotification @"AppLanguageDidChangeNotification"
+#define LineColor @"#DADADA"
+
+#import "AppDelegate.h"
+#import "APIServices.h"
+#import "UIBarButtonItem+Extension.h"
+#import "GlobalDefine.h"
+#import "CXRootViewController.h"
+#import <Masonry.h>
+#import <MyPublic/MyPublic.h>
+#import "TTGlobalUICommon.h"
+
+#endif /* PrefixHeader_pch */

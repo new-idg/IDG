@@ -1,0 +1,97 @@
+//
+//  YMQueueOrderViewController.m
+//  injoy_XJPDC
+//
+//  Created by yuemiao on 2018/11/17.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import "YMQueueOrderViewController.h"
+#import "YMQueueOrderTableViewCell.h"
+#import "YMQueueOrderFooterView.h"
+
+
+@interface YMQueueOrderViewController ()<UITableViewDelegate,UITableViewDataSource,YMQueueOrderFooterViewDelegate>
+
+@property (nonatomic, strong) UITableView *tableView;
+
+
+@end
+
+static NSString *const YMQueueOrderTableViewCellIdentity = @"YMQueueOrderTableViewCellIdentity";
+static NSString *const YMQueueOrderFooterViewIdentity = @"YMQueueOrderFooterViewIdentity";
+
+
+@implementation YMQueueOrderViewController
+
+- (UITableView *)tableView{
+    if (_tableView == nil) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.rowHeight = 50;
+        [_tableView registerClass:[YMQueueOrderTableViewCell class] forCellReuseIdentifier:YMQueueOrderTableViewCellIdentity];
+        [_tableView registerClass:[YMQueueOrderFooterView class] forHeaderFooterViewReuseIdentifier:YMQueueOrderFooterViewIdentity];
+        [self.view addSubview:_tableView];
+
+    }
+    return _tableView;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc]init]];
+    self.navigationController.navigationBar.barTintColor = [MyPublicClass colorWithHexString:@"#F83030"];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]}];
+    self.navigationItem.title = @"悠然奶茶";
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_offset(0);
+    }];
+}
+- (void)queueOrderFooterViewSelectedIIndex:(NSInteger)index{
+    NSLog(@"点击的是%ld",index);
+}
+#pragma mark -- UITableViewDelegate,UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 1;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 4;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 60;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 200;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UILabel *header = [[UILabel alloc] initWithFrame:CGRectZero];
+    header.text = [NSString stringWithFormat:@"    排队号:%ld",section];
+    return header;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    YMQueueOrderFooterView *footer = [tableView dequeueReusableHeaderFooterViewWithIdentifier:YMQueueOrderFooterViewIdentity];
+    footer.delegate = self;
+    return footer;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    YMQueueOrderTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:YMQueueOrderTableViewCellIdentity forIndexPath:indexPath];
+    return cell;
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

@@ -1,0 +1,120 @@
+//
+//  YMMineTableViewController.m
+//  injoy_XJPDC
+//
+//  Created by yuemiao on 2018/11/17.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import "YMMineTableViewController.h"
+#import "YMMineTableHeaderView.h"
+#import "YMMineTableViewCell.h"
+#import "YMQueueOrderViewController.h"
+#import "MyBankCardViewController.h"
+#import "MyBillViewController.h"
+#import "ContactUsViewController.h"
+#import "YMMyOrderViewController.h"
+
+@interface YMMineTableViewController ()<YMMineTableHeaderViewDelegate>
+
+@property (nonatomic, strong) NSArray *imageArray;
+@property (nonatomic, strong) NSArray *titleArray;
+
+@end
+
+static NSString *const YMMineTableViewCellIdentity = @"YMMineTableViewCellIdentity";
+
+@implementation YMMineTableViewController
+
+
+#pragma mark -- setter && getter
+- (NSArray *)imageArray{
+    if (_imageArray == nil) {
+        NSArray *array = @[[UIImage imageNamed:@"myOrder"],
+                          [UIImage imageNamed:@"myBill"],
+                          [UIImage imageNamed:@"myStatement"],
+                          [UIImage imageNamed:@"myBankCard"],
+                          [UIImage imageNamed:@"contactUs"]];
+        NSArray *arr = @[[UIImage imageNamed:@"settingUp"]];
+
+        _imageArray = @[array,arr];
+    }
+    return _imageArray;
+}
+- (NSArray *)titleArray{
+    if (_titleArray == nil) {
+        NSArray *array = @[@"我的订单",@"我的账单",@"我的报表",@"我的银行卡",@"联系我们"];
+        NSArray *arr = @[@"设置"];
+        _titleArray = @[array,arr];
+    }
+    return _titleArray;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc]init]];
+    self.navigationController.navigationBar.barTintColor = [MyPublicClass colorWithHexString:@"#F83030"];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]}];
+    self.navigationItem.title = @"我的";
+    YMMineTableHeaderView *tableHeaderView = [[YMMineTableHeaderView alloc] initWithAvatarImageURL:@"" name:@"张晓晓" phoneNumber:@"186****1806"];
+    tableHeaderView.frame = CGRectMake(0, 0, Screen_Width, 105);
+    tableHeaderView.delegate = self;
+    self.tableView.tableHeaderView = tableHeaderView;
+    [self.tableView registerClass:[YMMineTableViewCell class] forCellReuseIdentifier:YMMineTableViewCellIdentity];
+    
+    self.tableView.tableFooterView = [UIView new];
+}
+#pragma mark - YMMineTableHeaderViewDelegate
+- (void)tableHeaderViewClick{
+    NSLog(@"个人信息条目被点击");
+}
+
+#pragma mark - Tableview delegate && datasource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 2;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return section == 1 ? 1 : 5;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 48;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return  section == 0 ? 10 : 0;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    UIView *footer = [[UIView alloc] initWithFrame:CGRectZero];
+    footer.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1.0];
+    return footer;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    YMMineTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:YMMineTableViewCellIdentity forIndexPath:indexPath];
+    cell.imgView.image = self.imageArray[indexPath.section][indexPath.row];
+    cell.titleLabel.text = self.titleArray[indexPath.section][indexPath.row];
+    
+    return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    YMMineTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    NSString *title = cell.titleLabel.text;
+    NSLog(@"点击的cell,标题是%@",cell.titleLabel.text);
+    UIViewController *pushViewController;
+    if ([title isEqualToString:@"设置"]) {
+        
+    } else if ([title isEqualToString:@"我的订单"]) {
+        pushViewController = [YMMyOrderViewController new];
+    }else if ([title isEqualToString:@"我的账单"]) {
+        pushViewController = [[MyBillViewController alloc] init];
+    }else if ([title isEqualToString:@"我的报表"]) {
+        
+    }else if ([title isEqualToString:@"我的银行卡"]) {
+        pushViewController = [[MyBankCardViewController alloc] init];
+    }else if ([title isEqualToString:@"联系我们"]) {
+        pushViewController = [ContactUsViewController new];
+    }
+    
+    [self.navigationController pushViewController:pushViewController animated:YES];
+}
+
+@end

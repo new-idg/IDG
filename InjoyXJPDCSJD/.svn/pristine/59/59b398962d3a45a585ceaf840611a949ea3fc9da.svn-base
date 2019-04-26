@@ -1,0 +1,260 @@
+//
+//  LoginViewController.m
+//  injoy_XJPDC
+//
+//  Created by 念念不忘必有回响 on 2018/11/8.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import "LoginViewController.h"
+#import "SingaporeTabBarViewController.h"
+#import "YMAlertView.h"
+
+@interface LoginViewController ()
+
+@property (nonatomic ,strong) UITextField *telTextField;
+
+@property (nonatomic ,strong) UITextField *pwTextField;
+
+@property (nonatomic ,strong) UIImageView *showPWImg;
+
+@property (nonatomic ,strong) UIButton *loginButton;
+
+@property (nonatomic ,strong) UILabel *comName;
+
+@property (nonatomic ,strong) UILabel *comAddress;
+
+@property (nonatomic ,strong) UILabel *comContact;
+
+@end
+
+@implementation LoginViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self loadSubView];
+  
+}
+-(void)loadSubView{
+    
+    
+    UIScrollView *scrollView = [[UIScrollView alloc]initWithFrame:(CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height))];
+    scrollView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:scrollView];
+    
+    UIView *navView = [[UIView alloc]initWithFrame:(CGRectMake(0, 0, scrollView.frame.size.width, navHigh))];
+    [scrollView addSubview:navView];
+    
+    UIButton *closeButton = [[UIButton alloc]initWithFrame:(CGRectMake(12, navView.frame.size.height-35-9, 45, 35))];
+    [closeButton setImage:Image(@"close") forState:(UIControlStateNormal)];
+    closeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [navView addSubview:closeButton];
+    
+    UILabel *logLabel = [[UILabel alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(closeButton.frame), navView.frame.size.height-20-13, navView.frame.size.width-CGRectGetMaxX(closeButton.frame)-12-45, 20))];
+    logLabel.text = [MyPublicClass localizedLanguage:@"密码登录" userDefaultsForKey:APPLANGUAGE];
+    logLabel.textAlignment = NSTextAlignmentCenter;
+    logLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:18];
+    logLabel.textColor = [MyPublicClass colorWithHexString:@"#2B2B2B"];
+    [navView addSubview:logLabel];
+    
+    UIButton *langButton = [[UIButton alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(logLabel.frame), navView.frame.size.height-35-9, 45, 35))];
+    [langButton setTitle:[MyPublicClass localizedLanguage:@"语言" userDefaultsForKey:APPLANGUAGE] forState:(UIControlStateNormal)];
+    [langButton setTitleColor:[MyPublicClass colorWithHexString:@"#111111"] forState:(UIControlStateNormal)];
+    langButton.titleLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:14];
+    [navView addSubview:langButton];
+    
+    UIView *navLineView = [self loadLineViewFrame:(CGRectMake(0, navHigh-1, navView.frame.size.width, 1)) gbColor:[MyPublicClass colorWithHexString:LineColor]];
+    [navView addSubview:navLineView];
+    
+    UIView *telView = [[UIView alloc]initWithFrame:(CGRectMake(0, CGRectGetMaxY(navView.frame)+42, scrollView.frame.size.width, 70))];
+    [scrollView addSubview:telView];
+    
+    UIView *telLineView = [self loadLineViewFrame:(CGRectMake(25, telView.frame.size.height-1, telView.frame.size.width-25-25, 1)) gbColor:[MyPublicClass colorWithHexString:@"#F0F0F0"]];
+    [telView addSubview:telLineView];
+    
+    self.telTextField = [self loadTextFieldFrame:(CGRectMake(25, CGRectGetMinY(telLineView.frame)-8-40, telLineView.frame.size.width, 40)) placeholder:@"请输入手机号" placeholderColor:[MyPublicClass colorWithHexString:@"#999999"] font:[UIFont fontWithName:@"PingFang-SC-Medium" size:16]];
+    [telView addSubview:self.telTextField];
+    
+    UIView *pwView = [[UIView alloc]initWithFrame:(CGRectMake(0, CGRectGetMaxY(telView.frame), scrollView.frame.size.width, 70))];
+    [scrollView addSubview:pwView];
+    
+    NSString *forgetString = [MyPublicClass localizedLanguage:@"忘记密码" userDefaultsForKey:APPLANGUAGE];
+    CGRect rect = [MyPublicClass stringHeightByWidth:ScreenWidth-50 title:forgetString font:[UIFont fontWithName:@"PingFang-SC-Medium" size:14]];
+    
+    CGFloat rightW;
+    if (rect.size.width >134 ) {
+        rightW = rect.size.width+22+8+1+8+25;
+    }else{
+        rightW = 134;
+    }
+    
+    self.pwTextField = [self loadTextFieldFrame:(CGRectMake(25, pwView.frame.size.height-8-40, pwView.frame.size.width-25-rightW, 40)) placeholder:@"请输入密码" placeholderColor:[MyPublicClass colorWithHexString:@"#999999"] font:[UIFont fontWithName:@"PingFang-SC-Medium" size:16]];
+    self.pwTextField.secureTextEntry = YES;
+    [pwView addSubview:self.pwTextField];
+    
+    self.showPWImg = [[UIImageView alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(self.pwTextField.frame), CGRectGetMidY(self.pwTextField.frame)-11, 22, 22))];
+    self.showPWImg.image = [UIImage imageNamed:@"showPassW"];
+    [pwView addSubview:self.showPWImg];
+    
+    UIView *verLineView = [[UIView alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(self.showPWImg.frame)+8, CGRectGetMidY(self.showPWImg.frame)-7, 1, 14))];
+    verLineView.backgroundColor = [MyPublicClass colorWithHexString:@"#CCCCCC"];
+    [pwView addSubview:verLineView];
+    
+    UIButton *forgetPw = [[UIButton alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(verLineView.frame)+8, pwView.frame.size.height-8-40, pwView.frame.size.width-CGRectGetMaxX(verLineView.frame)-8-25, 40))];
+    [forgetPw setTitle:forgetString forState:(UIControlStateNormal)];
+    [forgetPw setTitleColor:[MyPublicClass colorWithHexString:@"#575757"] forState:(UIControlStateNormal)];
+    forgetPw.titleLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:14];
+    [pwView addSubview:forgetPw];
+    
+    UIView *pwLineView = [self loadLineViewFrame:(CGRectMake(25, pwView.frame.size.height-1, pwView.frame.size.width-25-25, 1)) gbColor:[MyPublicClass colorWithHexString:@"#F0F0F0"]];
+    [pwView addSubview:pwLineView];
+    
+    
+    self.loginButton = [[UIButton alloc]initWithFrame:(CGRectMake(25, CGRectGetMaxY(pwView.frame)+50, self.view.frame.size.width-50, 50))];
+    [self.loginButton setTitle:[MyPublicClass localizedLanguage:@"登录" userDefaultsForKey:APPLANGUAGE] forState:(UIControlStateNormal)];
+    [self.loginButton addTarget:self action:@selector(loginButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.loginButton setBackgroundColor:RGBA(250, 135, 132, 1)];
+    [scrollView addSubview:self.loginButton];
+    [MyPublicClass layerMasksToBoundsForAnyControls:self.loginButton cornerRadius:25 borderColor:nil borderWidth:0];
+    
+    UIButton *newUserRegis = [[UIButton alloc]initWithFrame:(CGRectMake(25, CGRectGetMaxY(self.loginButton.frame)+8, (self.view.frame.size.width-50)/2, 44))];
+    [newUserRegis setTitle:[MyPublicClass localizedLanguage:@"新用户注册" userDefaultsForKey:APPLANGUAGE] forState:(UIControlStateNormal)];
+    [newUserRegis setTitleColor:[MyPublicClass colorWithHexString:@"#575757"] forState:(UIControlStateNormal)];
+    newUserRegis.titleLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:14];
+    newUserRegis.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+//    [scrollView addSubview:newUserRegis];
+    
+    UIButton *verCode = [[UIButton alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(newUserRegis.frame), CGRectGetMaxY(self.loginButton.frame)+8, (self.view.frame.size.width-50)/2, 44))];
+    [verCode setTitle:[MyPublicClass localizedLanguage:@"手机验证登录" userDefaultsForKey:APPLANGUAGE] forState:(UIControlStateNormal)];
+    [verCode setTitleColor:[MyPublicClass colorWithHexString:@"#575757"] forState:(UIControlStateNormal)];
+    verCode.titleLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:14];
+    verCode.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [scrollView addSubview:verCode];
+    
+    
+    NSString *loginString = [MyPublicClass localizedLanguage:@"第三方账号登录" userDefaultsForKey:APPLANGUAGE];
+    CGRect loginrect = [MyPublicClass stringHeightByWidth:ScreenWidth-50 title:loginString font:[UIFont fontWithName:@"PingFang-SC-Medium" size:12]];
+    
+    CGFloat loginW = (self.view.frame.size.width-25-25-12-12-loginrect.size.width)/2;
+    
+    UIView *loginLeftLineView = [self loadLineViewFrame:(CGRectMake(25, CGRectGetMaxY(verCode.frame)+60, loginW, 1)) gbColor:[MyPublicClass colorWithHexString:@"#EFEFEF"]];
+//    [scrollView addSubview:loginLeftLineView];
+    
+    UILabel *loginText = [[UILabel alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(loginLeftLineView.frame)+12, CGRectGetMaxY(verCode.frame)+55, loginrect.size.width, 12))];
+    loginText.text = loginString;
+    loginText.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:12];
+    loginText.textColor = [MyPublicClass colorWithHexString:@"#CCCCCC"];
+//    [scrollView addSubview:loginText];
+    
+    UIView *loginFightLineView = [self loadLineViewFrame:(CGRectMake(CGRectGetMaxX(loginText.frame)+12, CGRectGetMaxY(verCode.frame)+60, loginW, 1)) gbColor:[MyPublicClass colorWithHexString:@"#EFEFEF"]];
+//    [scrollView addSubview:loginFightLineView];
+    
+    
+    UIButton *weChatButton = [[UIButton alloc]initWithFrame:(CGRectMake((self.view.frame.size.width-80)/3, CGRectGetMaxY(loginText.frame)+28, 40, 40))];
+    [weChatButton setBackgroundImage:Image(@"weChat") forState:(UIControlStateNormal)];
+//    [scrollView addSubview:weChatButton];
+    
+    NSString *weChatString = [MyPublicClass localizedLanguage:@"微信登录" userDefaultsForKey:APPLANGUAGE];
+    CGRect weChatRect = [MyPublicClass stringHeightByWidth:ScreenWidth-50 title:weChatString font:[UIFont fontWithName:@"PingFang-SC-Medium" size:12]];
+    
+    UILabel *weChatLabel = [[UILabel alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(weChatButton.frame)-(40+weChatRect.size.width)/2, CGRectGetMaxY(weChatButton.frame)+10, weChatRect.size.width, 12))];
+    weChatLabel.text = weChatString;
+    weChatLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:12];
+//    [scrollView addSubview:weChatLabel];
+    
+    
+    UIButton *faceButton = [[UIButton alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(weChatButton.frame)+(self.view.frame.size.width-80)/3, CGRectGetMaxY(loginText.frame)+28, 40, 40))];
+    [faceButton setBackgroundImage:Image(@"facebook") forState:(UIControlStateNormal)];
+//    [scrollView addSubview:faceButton];
+    
+    NSString *faceString = [MyPublicClass localizedLanguage:@"Facebook登录" userDefaultsForKey:APPLANGUAGE];
+    CGRect faceRect = [MyPublicClass stringHeightByWidth:ScreenWidth-50 title:faceString font:[UIFont fontWithName:@"PingFang-SC-Medium" size:12]];
+    
+    
+    UILabel *faceLabel = [[UILabel alloc]initWithFrame:(CGRectMake(CGRectGetMaxX(faceButton.frame)-(40+faceRect.size.width)/2, CGRectGetMaxY(faceButton.frame)+10, faceRect.size.width, 12))];
+    faceLabel.text = faceString;
+    faceLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:12];
+//    [scrollView addSubview:faceLabel];
+    
+    
+    self.comName = [self loadLabelFrameForY:CGRectGetMaxY(faceLabel.frame)+50 textString:@"公司名称：新加坡餐饮服务有限公司"];
+    [scrollView addSubview:self.comName];
+    
+    self.comAddress = [self loadLabelFrameForY:CGRectGetMaxY(self.comName.frame)+2 textString:@"公司地址：#05-12，Jurong east st21,640232"];
+    [scrollView addSubview:self.comAddress];
+    
+    self.comContact = [self loadLabelFrameForY:CGRectGetMaxY(self.comAddress.frame) textString:@"联系方式：+65 888888888"];
+    [scrollView addSubview:self.comContact];
+    
+    scrollView.contentSize = CGSizeMake(Screen_Width, CGRectGetMaxY(self.comContact.frame));
+    
+}
+-(UILabel *)loadLabelFrameForY:(CGFloat)y textString:(NSString *)text{
+    
+    NSString *labelString = [MyPublicClass localizedLanguage:text userDefaultsForKey:APPLANGUAGE];
+    CGRect faceRect = [MyPublicClass stringHeightByWidth:ScreenWidth-100 title:labelString font:[UIFont fontWithName:@"PingFang-SC-Medium" size:12]];
+    
+    UILabel *subLabel = [[UILabel alloc]initWithFrame:(CGRectMake(50, y, self.view.frame.size.width-100, faceRect.size.height))];
+    subLabel.text = text;
+    subLabel.font = [UIFont fontWithName:@"PingFang-SC-Medium" size:12];
+    subLabel.textColor = [MyPublicClass colorWithHexString:@"#A8A8A8"];
+    subLabel.numberOfLines = 0;
+    
+    return subLabel;
+    
+}
+
+
+-(UIView *)loadLineViewFrame:(CGRect)frame gbColor:(UIColor *)color{
+    
+    UIView *lineView = [[UIView alloc]initWithFrame:frame];
+    lineView.backgroundColor = color;
+   
+    return lineView;
+}
+
+-(UITextField *)loadTextFieldFrame:(CGRect)frame placeholder:(NSString *)placeholder placeholderColor:(UIColor *)placeholderColor font:(UIFont *)font{
+    
+    UITextField *textField = [[UITextField alloc]initWithFrame:frame];
+    textField.placeholder = [MyPublicClass localizedLanguage:placeholder userDefaultsForKey:APPLANGUAGE];
+    [MyPublicClass setTextField:textField placeholderColor:placeholderColor];
+    textField.font = font;
+    
+    return textField;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)loginButtonClick:(UIButton *)sender{
+    if (self.telTextField.text == nil || self.telTextField.text.length == 0)return;
+    if (self.pwTextField.text == nil || self.pwTextField.text.length == 0)return;
+    if ([self.telTextField.text isEqualToString:@"123456"] && [self.pwTextField.text isEqualToString:@"123456"]) {
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        if (window == nil) {
+            window = [UIApplication sharedApplication].delegate.window;
+        }
+        SingaporeTabBarViewController *tabbar = [[SingaporeTabBarViewController alloc] init];
+        window.rootViewController = tabbar;
+    }else{
+        YMAlertView *alertView = [[YMAlertView alloc] initWithTitle:@"登录失败" message:@"请输入正确的账号密码,请输入正确的账号密码请输入正确的账号密码,请输入正确的账号密码"];
+        [alertView show];
+    }
+
+}
+
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

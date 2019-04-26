@@ -1,0 +1,167 @@
+//
+//  YMSelledSettingTableViewCell.m
+//  injoy_XJPDC
+//
+//  Created by yuemiao on 2018/11/19.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import "YMSelledSettingTableViewCell.h"
+#import "YMSelledSeetingOrder.h"
+
+@interface YMSelledSettingTableViewCell ()<UITextFieldDelegate>
+
+@property (nonatomic, strong) UIImageView *orderImageView;
+@property (nonatomic, strong) UILabel *englishNameLabel;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *describeLabel;
+@property (nonatomic, strong) UILabel *selledCountLabel;
+@property (nonatomic, strong) UILabel *calorieLabel;
+@property (nonatomic, strong) UILabel *priceLabel;
+@property (nonatomic, strong) UILabel *residueStockLabel;
+@property (nonatomic, strong) UITextField *residueStockTextField;
+
+@end
+
+@implementation YMSelledSettingTableViewCell
+
+- (void)setOrder:(YMSelledSeetingOrder *)order{
+    _order = order;
+    self.orderImageView.backgroundColor = [UIColor redColor];
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self setupSubview];
+    }
+    return self;
+}
+- (void)setupSubview{
+    self.orderImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:self.orderImageView];
+    [self.orderImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(10);
+        make.left.mas_equalTo(12);
+        make.width.height.mas_equalTo(95);
+    }];
+    
+    self.englishNameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.englishNameLabel.text = @"01: Salted duck egg rice";
+    self.englishNameLabel.font = [UIFont systemFontOfSize:16];
+    self.englishNameLabel.textColor = [UIColor colorWithRed:52/255.0 green:52/255.0 blue:52/255.0 alpha:1];
+    [self.contentView addSubview:self.englishNameLabel];
+    [self.englishNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.orderImageView.mas_top);
+        make.left.mas_equalTo(self.orderImageView.mas_right).mas_offset(12);
+        make.right.mas_equalTo(-10);
+        make.height.mas_equalTo(16);
+    }];
+    
+    self.nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.nameLabel.text = @"红油咸鸭蛋饭";
+    self.nameLabel.font = [UIFont systemFontOfSize:16];
+    self.nameLabel.textColor = [UIColor colorWithRed:52/255.0 green:52/255.0 blue:52/255.0 alpha:1];
+    [self.contentView addSubview:self.nameLabel];
+    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.englishNameLabel.mas_bottom).mas_offset(8);
+        make.left.mas_equalTo(self.englishNameLabel.mas_left);
+        make.right.mas_equalTo(-10);
+        make.height.mas_equalTo(16);
+    }];
+    
+    self.describeLabel =  [[UILabel alloc] initWithFrame:CGRectZero];
+    self.describeLabel.text = @"招聘菜，主要原料：咸鸭蛋，靓汤";
+    self.describeLabel.font = [UIFont systemFontOfSize:10];
+    self.describeLabel.textColor = [UIColor colorWithRed:117/255.0 green:117/255.0 blue:117/255.0 alpha:1];
+    [self.contentView addSubview:self.describeLabel];
+    [self.describeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(10);
+        make.left.mas_equalTo(self.englishNameLabel.mas_left);
+        make.right.mas_equalTo(-10);
+        make.height.mas_equalTo(11);
+    }];
+    
+    self.selledCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.selledCountLabel.text =  @"月售: 3000份";
+    self.selledCountLabel.font = [UIFont systemFontOfSize:10];
+    self.selledCountLabel.textColor = [UIColor colorWithRed:117/255.0 green:117/255.0 blue:117/255.0 alpha:1];
+    [self.contentView addSubview:self.selledCountLabel];
+  
+    self.calorieLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.calorieLabel.text =  @"卡里路: 低";
+    self.calorieLabel.font = [UIFont systemFontOfSize:10];
+    self.calorieLabel.textColor = [UIColor colorWithRed:117/255.0 green:117/255.0 blue:117/255.0 alpha:1];
+    [self.contentView addSubview:self.calorieLabel];
+    [self.selledCountLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.describeLabel.mas_bottom).mas_offset(10);
+        make.left.mas_equalTo(self.englishNameLabel.mas_left);
+//        make.right.mas_equalTo(self.calorieLabel.mas_left).mas_offset(-30);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(11);
+    }];
+    [self.calorieLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.selledCountLabel.mas_top);
+        make.left.mas_equalTo(self.selledCountLabel.mas_right).mas_offset(30);
+        make.width.mas_equalTo(50);
+//        make.right.mas_equalTo(-10);
+        make.height.mas_equalTo(11);
+    }];
+    
+    self.priceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.priceLabel.text =  @"S$ 22";
+    self.priceLabel.font = [UIFont systemFontOfSize:16];
+    self.priceLabel.textColor = [UIColor colorWithRed:255/255.0 green:62/255.0 blue:62/255.0 alpha:1];
+    [self.contentView addSubview:self.priceLabel];
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.selledCountLabel.mas_bottom).mas_offset(10);
+        make.left.mas_equalTo(self.englishNameLabel.mas_left);
+        make.right.mas_equalTo(-10);
+        make.height.mas_equalTo(13);
+    }];
+    
+    self.residueStockTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+    self.residueStockTextField.delegate = self;
+    self.residueStockTextField.keyboardType = UIKeyboardTypeNumberPad;
+    self.residueStockTextField.backgroundColor =  [UIColor colorWithRed:243/255.0 green:243/255.0 blue:243/255.0 alpha:1];
+    self.residueStockTextField.text =  @"2000";
+    self.residueStockTextField.font = [UIFont systemFontOfSize:12];
+    self.residueStockTextField.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
+    self.residueStockTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.residueStockTextField.contentHorizontalAlignment= UIControlContentHorizontalAlignmentCenter;
+    [self.contentView addSubview:self.residueStockTextField];
+    [self.residueStockTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.selledCountLabel.mas_bottom).mas_offset(10);
+        make.width.mas_equalTo(40);
+        make.right.mas_equalTo(-10);
+        make.height.mas_equalTo(13);
+    }];
+    
+    self.residueStockLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.residueStockLabel.text =  @"剩余数量";
+    self.residueStockLabel.font = [UIFont systemFontOfSize:12];
+    self.residueStockLabel.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
+    [self.contentView addSubview:self.residueStockLabel];
+    [self.residueStockLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.selledCountLabel.mas_bottom).mas_offset(10);
+        make.right.mas_equalTo(self.residueStockTextField.mas_left).mas_offset(-10);
+        make.height.mas_equalTo(13);
+    }];
+    
+}
+
+#pragma mark --UITextFieldDelegate
+- (void)textFieldDidEndEditing:(UITextField *)textField{
+    self.order.orderSelledCount = textField.text;
+}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end

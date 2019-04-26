@@ -1,0 +1,151 @@
+//
+//  YMSelledOrderViewController.m
+//  injoy_XJPDC
+//
+//  Created by yuemiao on 2018/11/17.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import "YMSelledOrderViewController.h"
+#import "YMSelledSettingTableViewCell.h"
+#import "YMSelledSeetingOrder.h"
+#import "YMParameterSettingViewController.h"
+#import "YMParameterSettingCell.h"
+
+@interface YMSelledOrderViewController ()<UITableViewDelegate,UITableViewDataSource>
+
+@property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSArray *dataArray;
+
+@end
+static NSString *const YMSelledSettingTableViewCellIdentity = @"YMSelledSettingTableViewCellIdentity";
+static NSString *const YMParameterSettingCellIdentity = @"YMParameterSettingCellIdentity";
+
+@implementation YMSelledOrderViewController
+
+#pragma mark -- setter && getter
+- (UITableView *)tableView{
+    if (_tableView == nil) {
+        _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.rowHeight = 133;
+        [_tableView registerClass:[YMSelledSettingTableViewCell class] forCellReuseIdentifier:YMSelledSettingTableViewCellIdentity];
+             [_tableView registerClass:[YMParameterSettingCell class] forCellReuseIdentifier:YMParameterSettingCellIdentity];
+        _tableView.tableFooterView = [UIView new];
+        [self.view addSubview:_tableView];
+    }
+    return _tableView;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    [self.navigationController.navigationBar setShadowImage:[[UIImage alloc]init]];
+    self.navigationController.navigationBar.barTintColor = [MyPublicClass colorWithHexString:@"#F83030"];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor],NSFontAttributeName:[UIFont systemFontOfSize:18]}];
+    self.navigationItem.title = @"卓记酒家";
+    UIBarButtonItem *right = [[UIBarButtonItem alloc] initWithTitle:@"提交" style:UIBarButtonItemStyleDone target:self action:@selector(submit)];
+    self.navigationItem.rightBarButtonItem = right;
+    [self loadData];
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+    }];
+}
+#pragma mark --submit
+- (void)submit{
+    
+}
+#pragma mark -- load data
+- (void)loadData{
+    NSDictionary *dic0 = @{@"title":@"辣度 pungency degree",
+                           @"parameters":@[@"辣",@"不辣"]};
+    NSDictionary *dic1 = @{@"title":@"加料 additional option",
+                           @"parameters":@[@"加",@"不加"]};
+    self.dataArray = @[dic0,dic1];
+}
+#pragma mark --UITableViewDelegate,UITableViewDataSource
+- (NSInteger )numberOfSectionsInTableView:(UITableView *)tableView{
+    return self.dataArray.count +  1;
+}
+- (NSInteger )tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (section == 0) {
+        return 3;
+    } else {
+        NSDictionary *dictionary = self.dataArray[section - 1];
+        NSArray *array = dictionary[@"parameters"];
+        return array.count;
+    }
+}
+- (CGFloat )tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 40;
+}
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section{
+    if (section == 0) {
+        return @"菜品售完设置";
+    } else {
+        return self.dataArray[section - 1][@"title"];
+    }
+}
+- (CGFloat )tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    if (section == 0) {
+        return 40;
+    } else {
+        return 0;
+    }
+}
+- (CGFloat )tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0) {
+        return 133;
+    } else {
+        return 40;
+    }
+}
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section{
+    if (section == 0) {
+        return @"公共参数设置";
+    } else {
+        return @"";
+    }
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0) {
+        YMSelledSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:YMSelledSettingTableViewCellIdentity forIndexPath:indexPath];
+        //    YMSelledSeetingOrder *order = self.dataArray[indexPath.row];
+        YMSelledSeetingOrder *order = [[YMSelledSeetingOrder alloc] init];
+        cell.order = order;
+        cell.cellStyle = YMSelledSettingCellStyleParameter;
+        __weak typeof(self) weakSelf = self;
+        cell.parameterSettingBlock = ^(YMSelledSeetingOrder *order) {
+            NSLog(@"参数设置被点击===");
+            YMParameterSettingViewController *parameterSettingViewController = [[YMParameterSettingViewController alloc] init];
+            [weakSelf.navigationController pushViewController:parameterSettingViewController animated:YES];
+        };
+        return cell;
+    } else {
+        YMParameterSettingCell *cell = [tableView dequeueReusableCellWithIdentifier:YMParameterSettingCellIdentity forIndexPath:indexPath];
+        NSArray *array = self.dataArray[indexPath.section - 1][@"parameters"];
+        cell.titleLabel.text = array[indexPath.row];
+        CGFloat money = arc4random() %256 / 256.0 + 0.5;
+        cell.moneyLabel.text = [NSString stringWithFormat:@"%.2f",money];
+        return cell;
+    }
+    return nil;
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

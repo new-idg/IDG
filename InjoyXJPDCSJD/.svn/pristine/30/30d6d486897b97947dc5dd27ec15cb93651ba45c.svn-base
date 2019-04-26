@@ -1,0 +1,22 @@
+//
+//  YMAlertView.m
+//  injoy_XJPDC
+//
+//  Created by yuemiao on 2018/11/19.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import "YMAlertView.h"
+
+@implementation YMAlertView
+
+- (instancetype)showWithTitle:(NSString *)title message:(NSString *)message{
+//    self = [super init];
+    if (self) {
+        
+    }
+    return self;
+}
+
+
+@end

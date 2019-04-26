@@ -1,0 +1,19 @@
+//
+//  YMSelledSettingTableViewCell.h
+//  injoy_XJPDC
+//
+//  Created by yuemiao on 2018/11/19.
+//  Copyright © 2018 CX. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+@class YMSelledSeetingOrder;
+
+typedef void(^YMOrderResidueStockChangeBlock)(NSInteger residueStock);
+
+@interface YMSelledSettingTableViewCell : UITableViewCell
+
+@property (nonatomic, strong) YMSelledSeetingOrder *order;
+@property (nonatomic, copy) YMOrderResidueStockChangeBlock block;
+
+@end
